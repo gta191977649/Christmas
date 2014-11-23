@@ -35,10 +35,10 @@ Free to use on the following conditions:
 
 #define MAX_PLAYERS             60      //Define how much slots your server uses
 #define using_streamer          false   //When true you tell the script you are using Incognito's streamer
-#define SF 						false   //When true it will add some default objects in San Fierro (using 568 objects ! (You can edit it ofc))
+#define SF 			false   //When true it will add some default objects in San Fierro (using 568 objects ! (You can edit it ofc))
 #define MAX_BATTERIES           50      //Maximum firework batteries
-#define MAX_XMASTREES 			20 		//recommended - If you have more you might need a object streamer
-#define MAX_SNOW_OBJECTS    	5 		//recommended - If you have more you might need a object streamer
+#define MAX_XMASTREES 		20 	//recommended - If you have more you might need a object streamer
+#define MAX_SNOW_OBJECTS    	5 	//recommended - If you have more you might need a object streamer
 #define SNOW_UPDATE_INTERVAL	750     //time in milliseconds, the interval between the snow
 #define NEXT_YEAR               "2015"  //Which year is it next year ?
 
@@ -47,22 +47,22 @@ Free to use on the following conditions:
 	#define CreateObject CreateDynamicObject
 #endif
 //---------------------------------- COLORS ------------------------------------
-#define COLOR_INVISIBLE 			0xFFFFFF00
-#define COLOR_WHITE 				0xFFFFFFFF
-#define COLOR_BLACK 				0x000000FF
-#define COLOR_BLUE 					0x0000DDFF
-#define COLOR_RED 					0xAA3333AA
-#define COLOR_GREEN 				0x00FF00FF
-#define COLOR_PURPLE 				0xC2A2DAAA
-#define COLOR_YELLOW 				0xFFFF00AA
-#define COLOR_YELLOWORANGE 			0xE8D600FF
-#define COLOR_GREY 					0xAFAFAFAA
-#define COLOR_ORANGE 				0xFF5F11FF
-#define ORANGE 						0xF4B906FF
-#define COLOR_BROWN 				0x804000FF
-#define COLOR_CYAN 					0x00FFFFFF
-#define COLOR_LIGHTBLUE 			0x33CCFFAA
-#define COLOR_PINK 					0xFF80C0FF
+#define COLOR_INVISIBLE 	0xFFFFFF00
+#define COLOR_WHITE 		0xFFFFFFFF
+#define COLOR_BLACK 		0x000000FF
+#define COLOR_BLUE 		0x0000DDFF
+#define COLOR_RED 		0xAA3333AA
+#define COLOR_GREEN 		0x00FF00FF
+#define COLOR_PURPLE 		0xC2A2DAAA
+#define COLOR_YELLOW 		0xFFFF00AA
+#define COLOR_YELLOWORANGE	0xE8D600FF
+#define COLOR_GREY 		0xAFAFAFAA
+#define COLOR_ORANGE 		0xFF5F11FF
+#define ORANGE 			0xF4B906FF
+#define COLOR_BROWN 		0x804000FF
+#define COLOR_CYAN 		0x00FFFFFF
+#define COLOR_LIGHTBLUE 	0x33CCFFAA
+#define COLOR_PINK 		0xFF80C0FF
 
 #define COL_ORANGE         			"{FFAF00}"
 #define COL_GREEN          			"{6EF83C}"
@@ -72,7 +72,7 @@ Free to use on the following conditions:
 #define COL_EASY           			"{FFF1AF}"
 
 #define DIALOG_CHRISTMASMUSIC 		1113
-#define DIALOG_CHRISTMASMUSICALL    1114
+#define DIALOG_CHRISTMASMUSICALL    	1114
 #define DIALOG_CHRISTMAS        	1112
 #define DIALOG_CHRISTMASFW      	1110
 
@@ -105,7 +105,7 @@ forward  Animate();
 
 new
 	Text:SM_Textdraw[20],
-    Float:TheX = 508.000000,
+    	Float:TheX = 508.000000,
 	Float:BoxY = 0.499999,
 	gDirection,
 	gCount,
