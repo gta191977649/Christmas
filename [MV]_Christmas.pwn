@@ -444,23 +444,6 @@ public OnRconCommand(cmd[])
 	return 1;
 }
 
-CMD:tele(playerid,params[])
-{
-	new Float:x, Float:y,Float:z;
-	if(sscanf(params,"fff",x,y,z)) return 0;
-	SetPlayerPos(playerid,x,y,z);
-	return 1;
-}
-
-CMD:spawn(playerid,params[])
-{
-    new id,Float:x, Float:y,Float:z;
-	if(sscanf(params,"i",id)) return 0;
-	GetPlayerPos(playerid,x,y,z);
-	CreateChristmasTree(2, x,y+9,z);
-	return 1;
-}
-
 public OnFilterScriptExit()
 {
 	TextDrawDestroy(NYCounter[0]);
