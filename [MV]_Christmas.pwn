@@ -78,6 +78,7 @@ Free to use on the following conditions:
 
 #define TREE_TYPE_BIG               0
 #define TREE_TYPE_SMALL             1
+#define TREE_TYPE_SMALL2            2
 
 #define HAT_TYPE_1                  0
 #define HAT_TYPE_2                  1
@@ -348,8 +349,7 @@ public OnFilterScriptInit()
 	CreateObject(7666, -1998.1800537109, 148.45513916016, 74.819854736328, 0, 0, 0);
 	CreateObject(7666, -1998.1796875, 148.455078125, 74.819854736328, 0, 0, 280);
 	CreateObject(3472, -1997.4697265625, 148.650390625, 60.357498168945, 0, 0, 0);
-	
-//--------------------------------------SF circuslamposts----------------------------------------
+
 	CreateChristmasLights(-1293.96105957,471.57125854,6.18750000);
 	CreateChristmasLights(-1260.64416504,444.49423218,6.18750000); 
 	CreateChristmasLights(-1229.65881348,453.10644531,6.18750000); 
@@ -1369,13 +1369,13 @@ stock CreateChristmasTree(type, Float:X, Float:Y, Float:Z)
 		        }
 		    }
 		}
-		case 3:
+		case TREE_TYPE_SMALL2:
 		{
-			CreateObject(19076, X, Y, Z,   0.00, 0.00, 0.00);
-			CreateObject(19054, X+0.37, Y+2.38, Z,   0.00, 0.00, 0.00);
-			CreateObject(19055, X-1.18, Y-1.18, Z,   0.00, 0.00, 0.00);
-			CreateObject(19056, X+1.94, Y-1.34, Z,   0.00, 0.00, 0.00);
-			CreateObject(19057, X+1.67, Y+1.52, Z,   0.00, 0.00, 0.00);
+			CreateObject(19076, X, Y, Z-1,   0.00, 0.00, 0.00);
+			CreateObject(19054, X+0.37, Y+2.38, Z-0.5,   0.00, 0.00, 0.00);
+			CreateObject(19055, X-1.18, Y-1.18, Z-0.5,   0.00, 0.00, 0.00);
+			CreateObject(19056, X+1.94, Y-1.34, Z-0.5,   0.00, 0.00, 0.00);
+			CreateObject(19057, X+1.67, Y+1.52, Z-0.5,   0.00, 0.00, 0.00);
 		}
 	}
 }
@@ -1388,7 +1388,7 @@ stock CreateChristmasLights(Float:x, Float:y, Float:z)
 
 stock LoadMetasTextdraws()
 {
-    NYCounter[0] = TextDrawCreate(316.399780, 0.995545, "_");
+    	NYCounter[0] = TextDrawCreate(316.399780, 0.995545, "_");
 	TextDrawLetterSize(NYCounter[0], 0.293599, 1.510400);
 	TextDrawAlignment(NYCounter[0], 2);
 	TextDrawColor(NYCounter[0], -1);
@@ -1409,13 +1409,13 @@ stock LoadMetasTextdraws()
 	TextDrawSetOutline(NYCounter[1], 0);
 	TextDrawFont(NYCounter[1], 0);
 
-    NYCounter[2] = TextDrawCreate(340.000000, 350.000000, "~>~ HAPPY NEW YEAR ~<~~n~~y~"NEXT_YEAR"!");
-    TextDrawAlignment(NYCounter[2], 2);
-    TextDrawBackgroundColor(NYCounter[2], 255);
-    TextDrawFont(NYCounter[2], 1);
-    TextDrawLetterSize(NYCounter[2], 1.000000, 4.000000);
-    TextDrawColor(NYCounter[2], 16777215);
-    TextDrawSetOutline(NYCounter[2], 1);
+	NYCounter[2] = TextDrawCreate(340.000000, 350.000000, "~>~ HAPPY NEW YEAR ~<~~n~~y~"NEXT_YEAR"!");
+	TextDrawAlignment(NYCounter[2], 2);
+	TextDrawBackgroundColor(NYCounter[2], 255);
+	TextDrawFont(NYCounter[2], 1);
+	TextDrawLetterSize(NYCounter[2], 1.000000, 4.000000);
+	TextDrawColor(NYCounter[2], 16777215);
+	TextDrawSetOutline(NYCounter[2], 1);
 	TextDrawSetProportional(NYCounter[2], 1);
 
     s_Timer[0] = SetTimer("CounterTimer", 400, true);
