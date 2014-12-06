@@ -17,10 +17,6 @@ Free to use on the following conditions:
 	*Thanks to Zh3r0 for the moving snowman textdraw
 	*Thanks to Meta for the countdown snippet
 	*Thanks to ShOoBy for the snowball minigame
-----------------UPDATES:--------------------------------------------------------
-- Rescripted and optimized some functions/variables, just whole the script.
-- Redesigned newyearcountdowntextdraw
-- I don't know which version this is.
 */
 
 #include <a_samp>
@@ -35,34 +31,34 @@ Free to use on the following conditions:
 
 #define MAX_PLAYERS             60      //Define how much slots your server uses
 #define using_streamer          false   //When true you tell the script you are using Incognito's streamer
-#define SF 			false   //When true it will add some default objects in San Fierro (using 568 objects ! (You can edit it ofc))
+#define SF 						false   //When true it will add some default objects in San Fierro (using 568 objects ! (You can edit it ofc))
 #define MAX_BATTERIES           50      //Maximum firework batteries
-#define MAX_XMASTREES 		20 	//recommended - If you have more you might need a object streamer
-#define MAX_SNOW_OBJECTS    	5 	//recommended - If you have more you might need a object streamer
-#define SNOW_UPDATE_INTERVAL	750     //time in milliseconds, the interval between the snow
+#define MAX_XMASTREES 			20 		//recommended - If you have more you might need a object streamer
+#define MAX_SNOW_OBJECTS    	3 		//recommended - If you have more you might need a object streamer
+#define SNOW_UPDATE_INTERVAL	500     //time in milliseconds, the interval between the snow
 #define NEXT_YEAR               "2015"  //Which year is it next year ?
+#define FILE_SAVE               "[MV]_Christmas.txt" //The name of the file where to save positions too with /savepos
 
 #if using_streamer
 	#include <streamer>
 	#define CreateObject CreateDynamicObject
 #endif
 //---------------------------------- COLORS ------------------------------------
-#define COLOR_INVISIBLE 	0xFFFFFF00
-#define COLOR_WHITE 		0xFFFFFFFF
-#define COLOR_BLACK 		0x000000FF
-#define COLOR_BLUE 		0x0000DDFF
-#define COLOR_RED 		0xAA3333AA
-#define COLOR_GREEN 		0x00FF00FF
-#define COLOR_PURPLE 		0xC2A2DAAA
-#define COLOR_YELLOW 		0xFFFF00AA
-#define COLOR_YELLOWORANGE	0xE8D600FF
-#define COLOR_GREY 		0xAFAFAFAA
-#define COLOR_ORANGE 		0xFF5F11FF
-#define ORANGE 			0xF4B906FF
-#define COLOR_BROWN 		0x804000FF
-#define COLOR_CYAN 		0x00FFFFFF
-#define COLOR_LIGHTBLUE 	0x33CCFFAA
-#define COLOR_PINK 		0xFF80C0FF
+#define COLOR_INVISIBLE 			0xFFFFFF00
+#define COLOR_WHITE 				0xFFFFFFFF
+#define COLOR_BLACK 				0x000000FF
+#define COLOR_BLUE 					0x0000DDFF
+#define COLOR_RED 					0xAA3333AA
+#define COLOR_GREEN 				0x00FF00FF
+#define COLOR_PURPLE 				0xC2A2DAAA
+#define COLOR_YELLOW 				0xFFFF00AA
+#define COLOR_YELLOWORANGE 			0xE8D600FF
+#define COLOR_GREY 					0xAFAFAFAA
+#define COLOR_ORANGE 				0xFF5F11FF
+#define COLOR_BROWN 				0x804000FF
+#define COLOR_CYAN 					0x00FFFFFF
+#define COLOR_LIGHTBLUE 			0x33CCFFAA
+#define COLOR_PINK 					0xFF80C0FF
 
 #define COL_ORANGE         			"{FFAF00}"
 #define COL_GREEN          			"{6EF83C}"
@@ -71,10 +67,11 @@ Free to use on the following conditions:
 #define COL_YELLOW         			"{FFEA02}"
 #define COL_EASY           			"{FFF1AF}"
 
-#define DIALOG_CHRISTMASMUSIC 		1113
-#define DIALOG_CHRISTMASMUSICALL    	1114
-#define DIALOG_CHRISTMAS        	1112
 #define DIALOG_CHRISTMASFW      	1110
+#define DIALOG_SAVE                 1111
+#define DIALOG_CHRISTMAS        	1112
+#define DIALOG_CHRISTMASMUSIC 		1113
+#define DIALOG_CHRISTMASMUSICALL    1114
 
 #define TREE_TYPE_BIG               0
 #define TREE_TYPE_SMALL             1
@@ -106,7 +103,7 @@ forward  Animate();
 
 new
 	Text:SM_Textdraw[20],
-    	Float:TheX = 508.000000,
+    Float:TheX = 508.000000,
 	Float:BoxY = 0.499999,
 	gDirection,
 	gCount,
@@ -132,7 +129,7 @@ new s_Timer[2];
 
 public OnFilterScriptInit()
 {
-	print("[MV]_Christmas Version 1.3 loaded");
+	print("[MV]_Christmas loaded");
 
 	LoadMetasTextdraws();
 	LoadTextdraws();
@@ -140,7 +137,7 @@ public OnFilterScriptInit()
  	s_Timer[1] = SetTimer("Animate",300,true);
  	Loop(i,sizeof(batteries)) batteries[i][inuse] = false;
 
-	//------------------snowball minigame----
+	//snowball minigame
 	CreateObject(8172,-716.59997559,3800.50000000,8.50000000,0.00000000,0.00000000,90.00000000); //object(vgssairportland07) (1)
 	CreateObject(3074,-782.29998779,3785.30004883,8.50000000,0.00000000,270.00000000,269.99948120); //object(d9_runway) (6)
 	CreateObject(3074,-782.29998779,3798.89990234,8.50000000,0.00000000,270.00000000,269.99450684); //object(d9_runway) (7)
@@ -162,7 +159,6 @@ public OnFilterScriptInit()
 	CreateObject(8172,-729.09997559,3780.69995117,12.80000019,0.00000000,270.00000000,270.00000000); //object(vgssairportland07) (4)
 	CreateObject(8172,-726.20001221,3820.19995117,12.80000019,0.00000000,270.00000000,90.00000000); //object(vgssairportland07) (5)
 
-
 	//------------SF christmas trees---------
 	#if SF == true
 	CreateChristmasTree(TREE_TYPE_SMALL,-1549.0511,585.0486,7.1797);
@@ -176,7 +172,7 @@ public OnFilterScriptInit()
 	CreateChristmasTree(TREE_TYPE_SMALL,-2608.5371,1348.2877,7.1953);
 	
 	//SF big christmas tree with objects around
-	CreateObject(664,-2707.30761719,376.57815552,3.96888542,0.00000000,0.00000000,44.00000000);
+	/*CreateObject(664,-2707.30761719,376.57815552,3.96888542,0.00000000,0.00000000,44.00000000);
 	CreateObject(664,-2706.46826172,375.02407837,3.96923542,0.00000000,0.00000000,349.99475098);
 	CreateObject(664,-2707.12426758,379.04116821,3.96928978,0.00000000,0.00000000,97.99145508);
 	CreateObject(2486,-2708.43017578,373.17453003,4.97945309,0.00000000,0.00000000,354.00000000);
@@ -303,6 +299,7 @@ public OnFilterScriptInit()
 	CreateObject(3877,-2695.22143555,379.01626587,5.03292847,0.00000000,0.00000000,0.00000000);
 	CreateObject(3877,-2690.27124023,373.53881836,5.04664612,0.00000000,0.00000000,0.00000000);
 	CreateObject(3877,-2690.11132812,379.28613281,5.04073906,0.00000000,0.00000000,0.00000000);
+	
 //-----------------------ANOTHER CHRISTMAS TREE -------------------------------------------------------
 	CreateObject(664, -1998.0460205078, 148.79306030273, 25.906070709229, 0, 0, 340);
 	CreateObject(664, -1998.0458984375, 148.79296875, 25.906070709229, 0, 0, 325.99938964844);
@@ -348,8 +345,8 @@ public OnFilterScriptInit()
 	CreateObject(3534, -1996.2249755859, 139.30950927734, 40.745124816895, 356.91833496094, 167.98095703125, 24.164428710938);
 	CreateObject(7666, -1998.1800537109, 148.45513916016, 74.819854736328, 0, 0, 0);
 	CreateObject(7666, -1998.1796875, 148.455078125, 74.819854736328, 0, 0, 280);
-	CreateObject(3472, -1997.4697265625, 148.650390625, 60.357498168945, 0, 0, 0);
-
+	CreateObject(3472, -1997.4697265625, 148.650390625, 60.357498168945, 0, 0, 0);*/
+	
 	CreateChristmasLights(-1293.96105957,471.57125854,6.18750000);
 	CreateChristmasLights(-1260.64416504,444.49423218,6.18750000); 
 	CreateChristmasLights(-1229.65881348,453.10644531,6.18750000); 
@@ -451,7 +448,6 @@ public OnFilterScriptExit()
     TextDrawDestroy(NYCounter[2]);
     KillTimer(s_Timer[0]);
     KillTimer(s_Timer[1]);
-
 	DestroyTextdraws();
 
  	pLoop()
@@ -465,6 +461,7 @@ public OnFilterScriptExit()
  	Loop(i,sizeof(batteries)) DestroyObject(batteries[i][machine]);
 	return 1;
 }
+
 public OnPlayerDisconnect(playerid,reason)
 {
 	if(snowOn{playerid})
@@ -996,6 +993,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     {
 		case DIALOG_CHRISTMASMUSIC:
 	    {
+	        if(!response) return 0;
 	        switch(listitem)
 	        {
 				case 0:PlayAudioStreamForPlayer(playerid,"http://pat.exp-gaming.net/music/JoseFelicianoFelizNavidad.mp3");
@@ -1011,6 +1009,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 		}
 		case DIALOG_CHRISTMASMUSICALL:
 		{
+		    if(!response) return 0;
 			switch(listitem)
 			{
 				case 0:pLoop() PlayAudioStreamForPlayer(i,"http://pat.exp-gaming.net/music/JoseFelicianoFelizNavidad.mp3");
@@ -1023,6 +1022,33 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				case 7:pLoop() PlayAudioStreamForPlayer(i,"http://pat.exp-gaming.net/music/TrainShakeUpChristmas.mp3");
 				case 8:pLoop() StopAudioStreamForPlayer(i);
 			}
+		}
+
+		case DIALOG_SAVE:
+		{
+		    if(!response) return 0;
+		    new string[128],Float:f[3],File:file;
+		    
+	    	if (!fexist(FILE_SAVE))
+		        file = fopen(FILE_SAVE, io_write);
+		    else
+				file = fopen(FILE_SAVE, io_append);
+		    
+			if(!file) return SendClientMessage(playerid,COLOR_RED,"Script can't open file.");
+		    GetPlayerPos(playerid,f[0],f[1],f[2]);
+		    
+			switch(listitem)
+			{
+				case 0: format(string,sizeof(string),"CreateChristmasTree(TREE_TYPE_BIG,%0.2f,%0.2f,%0.2f);\r\n",f[0],f[1],f[2]);
+				case 1: format(string,sizeof(string),"CreateChristmasTree(TREE_TYPE_SMALL,%0.2f,%0.2f,%0.2f);\r\n",f[0],f[1],f[2]);
+				case 2: format(string,sizeof(string),"CreateChristmasTree(TREE_TYPE_SMALL2,%0.2f,%0.2f,%0.2f);\r\n",f[0],f[1],f[2]);
+				case 3: format(string,sizeof(string),"CreateChristmasLights(%0.2f,%0.2f,%0.2f);\r\n",f[0],f[1],f[2]);
+			}
+
+			fwrite(file, string);
+			fclose(file);
+			
+			SendClientMessage(playerid,COLOR_GREEN,"Position has been saved.");
 		}
 	}
 	return 0;
@@ -1093,10 +1119,19 @@ CMD:christmasmusicall(playerid,params[])
 
 CMD:christmas(playerid,params[])
 {
-	ShowPlayerDialog(playerid, DIALOG_CHRISTMAS, DIALOG_STYLE_MSGBOX,"[MV]_Christmas by Michael@Belgium","/hat - Attach a christmashat on your head. \n/snow - (Dis)able the snow \n/logo - (Dis)able the moving snowman\n/snowmini - Go to the snowball minigame\n/fw(2)help - Fireworks help\n/christmasmusic(all) /cm(a) - Stream popular christmas songs. \n/setnight - switches everyone to night","OK","");
+	ShowPlayerDialog(playerid, DIALOG_CHRISTMAS, DIALOG_STYLE_MSGBOX,"[MV]_Christmas by Michael@Belgium","/hat - Attach a christmashat on your head. \n/snow - (Dis)able the snow \n/logo - (Dis)able the moving snowman\n/snowmini - Go to the snowball minigame\n/fw(2)help - Fireworks help\n/christmasmusic(all) /cm(a) - Stream popular christmas songs. \n/setnight - switches everyone to night\n/savepos","OK","");
 	return 1;
 }
 
+CMD:savepos(playerid,params[])
+{
+	if(IsPlayerAdmin(playerid))
+	{
+		ShowPlayerDialog(playerid,DIALOG_SAVE,DIALOG_STYLE_LIST,"Choose type","Big christmas tree\nSmall christmas tree (1)\nSmall christmas tree (2)\nChristmas lights","Save","Cancel");
+	}
+	else return 0;
+	return 1;
+}
 
 CMD:snowmini(playerid,params[])
 {
@@ -1304,7 +1339,7 @@ public UpdateSnow(playerid)
     if(!snowOn{playerid}) return 0;
     new Float:pPos[3];
     GetPlayerPos(playerid, pPos[0], pPos[1], pPos[2]);
-    Loop(i,MAX_SNOW_OBJECTS) SetObjectPos(snowObject[playerid][i], pPos[0] + random(25), pPos[1] + random(25), pPos[2] - 5);
+    Loop(i,MAX_SNOW_OBJECTS) SetObjectPos(snowObject[playerid][i], pPos[0] + random(50), pPos[1] + random(50), pPos[2] - 10);
     return 1;
 }
 
@@ -1382,13 +1417,13 @@ stock CreateChristmasTree(type, Float:X, Float:Y, Float:Z)
 
 stock CreateChristmasLights(Float:x, Float:y, Float:z)
 {
-	CreateObject(3472, x,y,z,0,0,300);
+	CreateObject(3472, x,y,z-0.5,0,0,300);
 	CreateObject(3472, x,y,z+4,0,0,300);
 }
 
 stock LoadMetasTextdraws()
 {
-    	NYCounter[0] = TextDrawCreate(316.399780, 0.995545, "_");
+    NYCounter[0] = TextDrawCreate(316.399780, 0.995545, "_");
 	TextDrawLetterSize(NYCounter[0], 0.293599, 1.510400);
 	TextDrawAlignment(NYCounter[0], 2);
 	TextDrawColor(NYCounter[0], -1);
@@ -1409,13 +1444,13 @@ stock LoadMetasTextdraws()
 	TextDrawSetOutline(NYCounter[1], 0);
 	TextDrawFont(NYCounter[1], 0);
 
-	NYCounter[2] = TextDrawCreate(340.000000, 350.000000, "~>~ HAPPY NEW YEAR ~<~~n~~y~"NEXT_YEAR"!");
-	TextDrawAlignment(NYCounter[2], 2);
-	TextDrawBackgroundColor(NYCounter[2], 255);
-	TextDrawFont(NYCounter[2], 1);
-	TextDrawLetterSize(NYCounter[2], 1.000000, 4.000000);
-	TextDrawColor(NYCounter[2], 16777215);
-	TextDrawSetOutline(NYCounter[2], 1);
+    NYCounter[2] = TextDrawCreate(340.000000, 350.000000, "~>~ HAPPY NEW YEAR ~<~~n~~y~"NEXT_YEAR"!");
+    TextDrawAlignment(NYCounter[2], 2);
+    TextDrawBackgroundColor(NYCounter[2], 255);
+    TextDrawFont(NYCounter[2], 1);
+    TextDrawLetterSize(NYCounter[2], 1.000000, 4.000000);
+    TextDrawColor(NYCounter[2], 16777215);
+    TextDrawSetOutline(NYCounter[2], 1);
 	TextDrawSetProportional(NYCounter[2], 1);
 
     s_Timer[0] = SetTimer("CounterTimer", 400, true);
@@ -1513,7 +1548,6 @@ GetXYInFrontOfPlayer(playerid, &Float:x, &Float:y, Float:distance)
     y += (distance * floatcos(-a, degrees));
 }
 
-//---------------------------FW-------------------------------------------------
 stock FindEmptySlot()
 {
     for (new i=0;i<sizeof(batteries);i++) {
