@@ -13,6 +13,7 @@ Christmas
 #define MAX_SNOW_OBJECTS   		5 	    //recommended - If you have more you might need a object streamer
 #define SNOW_UPDATE_INTERVAL	750     //time in milliseconds, the interval between the snow
 #define NEXT_YEAR          		"2015"  //Which year is it next year ?
+#define FILE_SAVE               "[MV]_Christmas.txt" //The name of the file where to save positions too with /savepos
 ```
 
 
@@ -45,6 +46,7 @@ GiveChristmasHat(playerid,HAT_TYPE_1);
 <h1>Commands</h1>
 ```
 /christmas
+/savepos - Dynamicly save christmas trees or lights using your current position
 ```
 
 <h1>Images</h1>
